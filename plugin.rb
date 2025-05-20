@@ -1,13 +1,18 @@
 # name: discourse-auto-remove-group
-# version: 0.1
-# authors: Your Name
+# version: 0.3
+# authors: David Muszynski
 # url: https://github.com/tknospdr/discourse-auto-remove-group
 
-enabled_site_setting :auto_remove_group_enabled
-
-register_site_setting :auto_remove_group_enabled, type: :boolean, default: false
-register_site_setting :auto_remove_group_category_id, type: :integer, default: 0
-register_site_setting :auto_remove_group_name, type: :string, default: ""
+# Define site settings manually for older Discourse versions
+add_to_class :site_setting, :auto_remove_group_enabled do
+  SiteSetting.get(:auto_remove_group_enabled, false)
+end
+add_to_class :site_setting, :auto_remove_group_category_id do
+  SiteSetting.get(:auto_remove_group_category_id, 0)
+end
+add_to_class :site_setting, :auto_remove_group_name do
+  SiteSetting.get(:auto_remove_group_name, "")
+end
 
 after_initialize do
   # Ensure required constants are defined
@@ -15,12 +20,12 @@ after_initialize do
 
   DiscourseEvent.on(:post_created) do |post|
     # Skip if plugin is disabled or required objects are missing
-    next unless SiteSetting.auto_remove_group_enabled
+    next unless SiteSetting.respond_to?(:auto_remove_group_enabled) && SiteSetting.auto_remove_group_enabled
     next unless post&.user
     next unless post&.topic&.category_id
 
-    target_category_id = SiteSetting.auto_remove_group_category_id
-    group_name = SiteSetting.auto_remove_group_name
+    target_category_id = SiteSetting.respond_to?(:auto_remove_group_category_id) ? SiteSetting.auto_remove_group_category_id : 0
+    group_name = SiteSetting.respond_to?(:auto_remove_group_name) ? SiteSetting.auto_remove_group_name : ""
 
     # Skip if category or group name is not configured
     next unless target_category_id > 0 && group_name.present?
