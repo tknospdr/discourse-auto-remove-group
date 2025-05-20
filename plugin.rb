@@ -1,26 +1,30 @@
 # name: discourse-auto-remove-group
 # version: 0.1
-# authors: David Muszynski
+# authors: Your Name
 # url: https://github.com/tknospdr/discourse-auto-remove-group
 
 enabled_site_setting :auto_remove_group_enabled
 
-# Site setting to enable/disable the plugin
-register_site_setting :auto_remove_group_enabled, type: :boolean, default: true
-register_site_setting :auto_remove_group_category_id, type: :integer, default: 15
-register_site_setting :auto_remove_group_name, type: :string, default: "marketplace"
+register_site_setting :auto_remove_group_enabled, type: :boolean, default: false
+register_site_setting :auto_remove_group_category_id, type: :integer, default: 0
+register_site_setting :auto_remove_group_name, type: :string, default: ""
 
 after_initialize do
-  # Listen for post creation events
+  # Ensure required constants are defined
+  next unless defined?(DiscourseEvent) && defined?(SiteSetting) && defined?(Group)
+
   DiscourseEvent.on(:post_created) do |post|
+    # Skip if plugin is disabled or required objects are missing
     next unless SiteSetting.auto_remove_group_enabled
-    next unless post&.user # Ensure post has a user
-    next unless post&.topic&.category_id # Ensure post is in a category
+    next unless post&.user
+    next unless post&.topic&.category_id
 
     target_category_id = SiteSetting.auto_remove_group_category_id
     group_name = SiteSetting.auto_remove_group_name
 
-    # Check if the post is in the configured category
+    # Skip if category or group name is not configured
+    next unless target_category_id > 0 && group_name.present?
+
     if post.topic.category_id == target_category_id
       begin
         group = Group.find_by(name: group_name)
