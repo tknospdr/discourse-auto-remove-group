@@ -1,0 +1,13 @@
+plugins:
+  auto_remove_group_enabled:
+    default: false
+    client: true
+    type: boolean
+  auto_remove_group_category_id:
+    default: 0
+    client: true
+    type: integer
+  auto_remove_group_name:
+    default: ''
+    client: true
+    type: string
