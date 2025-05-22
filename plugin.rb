@@ -1,6 +1,7 @@
 # name: discourse-auto-remove-group
+# about: Allows you to remove users from a group after they post in a selected category
 # version: 0.4
-# authors: David M
+# authors: David Muszynski
 # url: https://github.com/tknospdr/discourse-auto-remove-group
 
 enabled_site_setting :auto_remove_group_enabled
