@@ -8,3 +8,7 @@ en:
     auto_remove_group_enabled: Enable the Auto Remove User from Group plugin.
     auto_remove_group_category_id: Set the category ID number you are watching for posts. It can be found in the URL when you navigate to a category.
     auto_remove_group_name: Set the group you want the user to be removed from once they post in category selected above.
+  js:
+    auto_remove_group:
+      title: Auto Remove User from Group
+      admin_navigation: Auto Remove User
