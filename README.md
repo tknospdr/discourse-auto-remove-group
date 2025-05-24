@@ -1,4 +1,4 @@
-Discourse Auto Remove from Group
+Discourse Auto Remove User from Group
 
 This plugin was developed for the very specific purpose of removing users from a specific group when that user creates a post under a specific category.
 
